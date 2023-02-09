@@ -24,7 +24,7 @@ jobs:
           prerelease: false
 
   publish:
-    name: publish ${{ matrix.name }}
+    name: publish
     needs:
       - release
     runs-on: ubuntu-latest
