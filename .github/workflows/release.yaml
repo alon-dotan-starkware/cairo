@@ -23,8 +23,8 @@ jobs:
           draft: false
           prerelease: false
 
-  publish:
-    name: publish
+  build:
+    name: build
     needs:
       - release
     runs-on: ubuntu-latest
@@ -45,3 +45,14 @@ jobs:
         with:
           name: release-x86_64-unknown-linux-musl
           path: target/x86_64-unknown-linux-musl.tar.gz
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: target/x86_64-unknown-linux-musl.tar.gz
+          asset_name: release-x86_64-unknown-linux-musl
+          asset_content_type: application/tar
