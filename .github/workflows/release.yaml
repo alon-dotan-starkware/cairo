@@ -18,8 +18,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          # tag_name: ${{ github.ref }}
+          # release_name: ${{ github.ref }}
           draft: false
           prerelease: false
 
@@ -45,6 +45,6 @@ jobs:
           rust_target: ${{ matrix.target }}
           archive_suffix: ${{ matrix.suffix }}
           archive_types: ${{ matrix.archive }}
-          extra_files: "README.md README_zh.md LICENSE"
+          extra_files: "README.md LICENSE"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
