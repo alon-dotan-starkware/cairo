@@ -1,47 +1,56 @@
 name: release
 on:
-  # push:
-  #   tags:
-  #     - 'v*'
   push:
-    branches: [main]
+    tags:
+      - 'v*'
 
 jobs:
   release:
     name: Create Official Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install musl tools.
         run: sudo apt-get install -y musl-tools
 
       - name: Build in unknown linux
         run: ./scripts/release_tar.sh x86_64-unknown-linux-musl
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          # tag_name: ${{ github.ref }}
-          # release_name: ${{ github.ref }}
-          tag_name: "test2"
-          release_name: "test2"
-          draft: false
-          prerelease: false
-
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/x86_64-unknown-linux-musl.tar.gz
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/x86_64-unknown-linux-musl.tar.gz
           asset_name: release-x86_64-unknown-linux-musl
-          asset_content_type:  application/gzip
+          # tag: ${{ github.ref }}
+          tag: "test4"
+          overwrite: true
+          body: "Cairo compiler."
+
+
+
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
+
+      # - uses: actions-rs/toolchain@v1
+      #   with:
+      #     toolchain: stable
+
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: target/x86_64-unknown-linux-musl.tar.gz
+      #     asset_name: release-x86_64-unknown-linux-musl
+      #     asset_content_type:  application/gzip
